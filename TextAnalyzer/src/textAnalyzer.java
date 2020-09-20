@@ -1,3 +1,13 @@
+/* Author: Julia Smith
+ * Date: Sept 20, 2020
+ * Specs: text analyzer that reads a file from provided URL and outputs statistics about that file.
+ * Expected output: 
+ * 1. the word frequencies of all words in the file in the form of pair 
+ * (each pair containing a word and how many times it occurred in the file), sorted by the most frequently used word. 
+ * 2. displaying of top 20 words. 
+ */
+
+
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,36 +45,59 @@ public class textAnalyzer {
 
 	public static void main(String[] args) throws Exception {
 
-		
+			System.out.println("Hello, Dear Guest!" );
+			System.out.println("This program ");
+			System.out.println("will access file containing poem *The Raven* by Edgar Allan Poe, storred on the server of the Project Gutenberg ");
+			System.out.println ("and");
+			System.out.println ("will find the most used words in its text");
+			System.out.println("*******************************************************************************************************************");
+			
 		try {
-			// Get Document object after parsing the html from given url.
+			// Get Document object after parsing the html from given URL.
 			document = Jsoup.connect("https://www.gutenberg.org/files/1065/1065-h/1065-h.htm").get();
 
-			String title = document.title(); // Get title
-			// print(" Title: " + title); //Print title.
-
+//			String title = document.title(); // Get title 
+//			System.out.println("Here is the text from the title " + title);
+			
 			Elements header = document.select("h1,h4,h3");
+			
+			System.out.println("Here is the text from the title: " + header);
+			
+			
+			System.out.println();
+			
 			Elements poem = document.select("p.poem");
-			String elementsText = header.text() + " " + poem.text();
-//			System.out.println(elementsText);
+			System.out.println("And this is the text of the poem: " +poem);
 
+			String elementsText = header.text() + " " + poem.text();
+			System.out.println();
+			System.out.println("Removing HTML markup...");
+			System.out.println("This is the text we have to analyze: " +elementsText);
+			System.out.println();
+
+			System.out.println("Removing all punctuation...");
 			String text = elementsText.replaceAll("[^a-zA-Z0-9]", " "); // "\\p{Punct}",""
 			String stringToUse = text.replaceAll("\\s+", " ");
-//			System.out.println(stringToUse);
+			System.out.println("Nice!");
+			System.out.println("Now, when we extracted all the words, we have following to work with: ");
+			System.out.println(stringToUse);
 					
+			System.out.println("Let's see...Give me a minute...");
+			System.out.println();
+			
 			String[] stringArray = stringToUse.split(" ");
-//			List <String> textToProcess = new ArrayList<String>();
+			List <String> textToProcess = new ArrayList<String>();
 				
-//			textToProcess = Arrays.asList(string);
-				
+//			textToProcess = Arrays.asList(string);   DELETE???
+//				
 //				for(String element: textToProcess) {
 //					System.out.println(element);
 //				}
 			
 			
 			Map<String, Integer> map = new HashMap<String, Integer>();
-//			countWords(stringToUse, words);
-//			System.out.println(words);
+//			countWords(stringToUse, words);        DELETE???
+//		System.out.println(words);
 			
 // counting words in array
 			 for (String word : stringArray) {
@@ -74,10 +107,8 @@ public class textAnalyzer {
 			        
 			    }
 			 
-			// System.out.println(map);
-			 
-//
-
+			// System.out.println("Here is how many times each word was used : " + map);
+			
 				Map<String, Integer> treeMap = new TreeMap<String, Integer>(){
 				                
 				                	public int compare (Integer o1, Integer o2) {
@@ -86,11 +117,14 @@ public class textAnalyzer {
 				                };
 				                treeMap.putAll(map);
 				                
-				              // printMap(treeMap); 
-			 
+				              System.out.println("Here is how many times each word was used ");
+				              System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");      
+				               printMap(treeMap); 
+				              System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"); 
+				            System.out.println("WOW! That's a lot to scroll. Hold on... ");     
 				               
 				               Map<String, Integer> sortedMap = sortByValue(treeMap);
-				               //printMap(sortedMap);
+				             // printMap(sortedMap);
 				               
 				               LinkedHashMap<String, Integer> reverseSortedMap = new LinkedHashMap<>();
 				               sortedMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -98,9 +132,14 @@ public class textAnalyzer {
 				                
 				               //System.out.println("Reverse Sorted Map   : " + reverseSortedMap);
 				     
-				            //   printMap(reverseSortedMap);
-				               
-				              printTop10(reverseSortedMap);
+				              //printMap(reverseSortedMap);
+				               System.out.println();
+				               System.out.println("Let's find top 20 words in the poem...");
+				               System.out.println();
+				               System.out.println("Looks like here are our WINNERS : ");
+				              printTop20(reverseSortedMap);
+				              
+				              
 				              
 				             
 				               
@@ -128,14 +167,14 @@ public class textAnalyzer {
 
 
 
-	private static void  printTop10(LinkedHashMap<String, Integer> reverseSortedMap) {
+	private static void  printTop20(LinkedHashMap<String, Integer> reverseSortedMap) {
 	//	System.out.print(reverseSortedMap.keySet().stream().sorted().limit(10).collect(Collectors.toMap(Function.identity(), reverseSortedMap::get)));
 		
 		
 
 		List array = new ArrayList(reverseSortedMap.keySet());
 		
-		array = array.subList(0,10);
+		array = array.subList(0,20);
 	//	System.out.println(array + "HERE" );
 		
 
@@ -163,7 +202,7 @@ public class textAnalyzer {
 	      Entry<String, Integer> entry = iterator.next();
 	      Integer value = entry.getValue();
 
-	      if (value.compareTo(Integer.valueOf((int) 11)) < 0) {
+	      if (value.compareTo(Integer.valueOf((int) 8)) < 0) { //????? #
 	        //System.out.println("removing : " + entry);
 	        // priceMap.remove(entry.getKey()); // wrong - will throw
 	        // ConcurrentModficationException
@@ -176,6 +215,8 @@ public class textAnalyzer {
 	      
 
 	    }
+	    
+	    
 	    System.out.println(setOfEntries);
 	    
 	    
